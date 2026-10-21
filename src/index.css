@@ -21,23 +21,23 @@
   --brand-soft: 226 231 222; /* #E2E7DE sage tint for hover and active backgrounds */
   --on-brand: 251 249 245;   /* text on filled brand surfaces */
   --danger: 155 44 44;       /* #9B2C2C */
-  color-scheme: light dark;
+  color-scheme: light;
 }
-@media (prefers-color-scheme: dark) {
-  :root {
-    --paper: 20 27 23;
-    --surface: 29 40 34;
-    --ink: 238 241 234;
-    --muted: 168 182 172;
-    --line: 52 67 58;
-    --sage: 107 142 120;
-    --brand: 143 181 157;
-    --brand-soft: 38 56 45;
-    --on-brand: 16 28 21;
-    --danger: 255 150 150;
-  }
-  .logo-mark { filter: brightness(0) invert(0.92); }
+/* Dark theme, applied by setting data-theme="dark" on <html> (see src/lib/theme.ts and the inline script in index.html). */
+:root[data-theme='dark'] {
+  --paper: 24 33 29;         /* #18211D */
+  --surface: 35 47 41;       /* #232F29 */
+  --ink: 242 236 225;        /* #F2ECE1 */
+  --muted: 197 208 199;      /* #C5D0C7 */
+  --line: 58 72 64;          /* #3A4840 */
+  --sage: 107 142 120;       /* #6B8E78 */
+  --brand: 163 196 170;      /* #A3C4AA */
+  --brand-soft: 47 64 55;
+  --on-brand: 24 33 29;
+  --danger: 255 150 150;
+  color-scheme: dark;
 }
+:root[data-theme='dark'] .logo-mark { filter: brightness(0) invert(0.92); }
 
 html { -webkit-text-size-adjust: 100%; }
 body { @apply bg-paper text-ink font-sans antialiased; min-height: 100vh; overflow-wrap: anywhere; }
