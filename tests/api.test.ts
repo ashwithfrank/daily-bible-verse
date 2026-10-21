@@ -79,15 +79,17 @@ describe('public verse query', () => {
     const eq = vi.fn(() => chain);
     chain.select = () => chain;
     chain.eq = eq;
+    chain.lte = () => chain;
     chain.maybeSingle = () => Promise.resolve({ data: null, error: null });
-    expect(await getVerseByDate('2030-01-01')).toBeNull();
-    expect(eq).toHaveBeenCalledWith('verse_date', '2030-01-01');
+    expect(await getVerseByDate('2020-01-01')).toBeNull();
+    expect(eq).toHaveBeenCalledWith('verse_date', '2020-01-01');
   });
 
   it('throws on database errors', async () => {
     chain.select = () => chain;
     chain.eq = () => chain;
+    chain.lte = () => chain;
     chain.maybeSingle = () => Promise.resolve({ data: null, error: { message: 'down' } });
-    await expect(getVerseByDate('2030-01-01')).rejects.toThrow('down');
+    await expect(getVerseByDate('2020-01-01')).rejects.toThrow('down');
   });
 });

@@ -41,7 +41,7 @@ function renderAt(path: string) {
 
 beforeEach(() => {
   getVerseByDate.mockReset();
-  getVerseByDate.mockImplementation(async (d: string) => (d === '2026-10-20' || d === '2026-10-21' ? verse(d) : null));
+  getVerseByDate.mockImplementation(async (d: string) => (d === '2026-10-20' || d === '2026-10-19' ? verse(d) : null));
 });
 
 describe('public verse page', () => {
@@ -53,17 +53,17 @@ describe('public verse page', () => {
     expect(screen.getByText('Tuesday, October 20, 2026')).toBeInTheDocument();
   });
 
-  it('loads the verse for a selected date from the URL and the date picker', async () => {
+  it('loads an earlier date chosen with the previous-day control', async () => {
     renderAt('/');
     await screen.findByText(/You also must be ready/);
-    await userEvent.click(screen.getByRole('button', { name: 'Next day' }));
-    await waitFor(() => expect(getVerseByDate).toHaveBeenCalledWith('2026-10-21'));
-    expect(await screen.findByText('Wednesday, October 21, 2026')).toBeInTheDocument();
-    expect(screen.getByTestId('where')).toHaveTextContent('/2026-10-21');
+    await userEvent.click(screen.getByRole('button', { name: 'Previous day' }));
+    await waitFor(() => expect(getVerseByDate).toHaveBeenCalledWith('2026-10-19'));
+    expect(await screen.findByText('Monday, October 19, 2026')).toBeInTheDocument();
+    expect(screen.getByTestId('where')).toHaveTextContent('/2026-10-19');
   });
 
   it('shows a friendly message, not another verse, when the date has no verse', async () => {
-    renderAt('/2026-12-25');
+    renderAt('/2026-10-05');
     expect(await screen.findByText(/No verse has been scheduled for this date yet/)).toBeInTheDocument();
     expect(screen.queryByText(/You also must be ready/)).not.toBeInTheDocument();
   });
@@ -75,18 +75,18 @@ describe('public verse page', () => {
   });
 
   it('switches language, shows the translation label, and keeps the selected date', async () => {
-    renderAt('/2026-10-21');
+    renderAt('/2026-10-19');
     await screen.findByText(/You also must be ready/);
     await userEvent.selectOptions(screen.getByLabelText('Language'), 'kn');
     expect(await screen.findByText(/ಕನ್ನಡ ಪಠ್ಯ/)).toBeInTheDocument();
     expect(screen.getByText('Kannada — Test KN')).toBeInTheDocument();
-    expect(screen.getByText('Wednesday, October 21, 2026')).toBeInTheDocument();
-    expect(screen.getByTestId('where')).toHaveTextContent('/2026-10-21?lang=kn');
+    expect(screen.getByText('Monday, October 19, 2026')).toBeInTheDocument();
+    expect(screen.getByTestId('where')).toHaveTextContent('/2026-10-19?lang=kn');
     expect(getVerseByDate).toHaveBeenCalledTimes(1); // no refetch on language change
   });
 
   it('says so when a language has no translation, and still shows the English original', async () => {
-    renderAt('/2026-10-21?lang=ta');
+    renderAt('/2026-10-19?lang=ta');
     expect(await screen.findByText(/No reviewed Tamil translation is available/)).toBeInTheDocument();
     expect(screen.getByText(/You also must be ready/)).toBeInTheDocument();
   });
@@ -126,15 +126,15 @@ describe('public verse page', () => {
   it('shares the displayed translation, selected date and URL (clipboard fallback)', async () => {
     const writeText = vi.fn().mockResolvedValue(undefined);
     Object.defineProperty(navigator, 'clipboard', { value: { writeText }, configurable: true });
-    renderAt('/2026-10-21?lang=kn');
+    renderAt('/2026-10-19?lang=kn');
     await userEvent.click(await screen.findByRole('button', { name: 'Share' }));
     await waitFor(() => expect(writeText).toHaveBeenCalled());
     const text = writeText.mock.calls[0][0] as string;
     expect(text).toContain('Luke 12:40');
-    expect(text).toContain('Wednesday, October 21, 2026');
+    expect(text).toContain('Monday, October 19, 2026');
     expect(text).toContain('\u201Cಕನ್ನಡ ಪಠ್ಯ\u201D');
     expect(text).toContain('(Kannada — Test KN)');
-    expect(text).toContain('https://example.org/2026-10-21?lang=kn');
+    expect(text).toContain('https://example.org/2026-10-19?lang=kn');
     expect(await screen.findByText('Verse copied to clipboard')).toBeInTheDocument();
   });
 });

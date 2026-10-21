@@ -8,8 +8,9 @@ function tokens(block: string): Record<string, [number, number, number]> {
   for (const m of block.matchAll(/--([a-z-]+):\s*(\d+) (\d+) (\d+);/g)) out[m[1]] = [Number(m[2]), Number(m[3]), Number(m[4])];
   return out;
 }
-const light = tokens(css.slice(css.indexOf(':root {'), css.indexOf('@media (prefers-color-scheme: dark)')));
-const dark = { ...light, ...tokens(css.slice(css.indexOf('@media (prefers-color-scheme: dark)'), css.indexOf('html {'))) };
+const light = tokens(css.slice(css.indexOf(':root {'), css.indexOf('}', css.indexOf(':root {'))));
+const darkStart = css.indexOf(":root[data-theme='dark'] {");
+const dark = { ...light, ...tokens(css.slice(darkStart, css.indexOf('}', darkStart))) };
 
 const lum = ([r, g, b]: number[]) => {
   const c = [r, g, b].map((v) => { const s = v / 255; return s <= 0.03928 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4; });

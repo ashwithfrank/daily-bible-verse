@@ -23,8 +23,8 @@ describe('routing under the GitHub Pages base path', () => {
   });
 
   it('renders a dated verse URL under the base', async () => {
-    renderAt('/daily-bible-verse/2026-10-20');
-    expect((await screen.findAllByText('Tuesday, October 20, 2026')).length).toBeGreaterThan(0);
+    renderAt('/daily-bible-verse/2020-01-01');
+    expect((await screen.findAllByText('Wednesday, January 1, 2020')).length).toBeGreaterThan(0);
   });
 
   it('renders the admin area (guarded) at /daily-bible-verse/admin, not the 404 page', async () => {
@@ -32,6 +32,13 @@ describe('routing under the GitHub Pages base path', () => {
     // No Supabase variables in the test environment, so the guard shows the setup notice.
     expect(await screen.findByRole('alert')).toHaveTextContent(/Setup incomplete/);
     expect(screen.queryByText(/This page does not exist/)).not.toBeInTheDocument();
+  });
+
+  it('renders the About and Privacy pages under the base', async () => {
+    renderAt('/daily-bible-verse/about');
+    expect(await screen.findByRole('heading', { name: 'About Daily Bible Verse' })).toBeInTheDocument();
+    renderAt('/daily-bible-verse/privacy');
+    expect(await screen.findAllByRole('heading', { name: 'Privacy Policy' })).not.toHaveLength(0);
   });
 
   it('renders the admin login page under the base', async () => {
