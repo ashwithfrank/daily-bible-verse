@@ -19,7 +19,7 @@ export function LanguageSelect({ value, available, onChange, versions, versionId
         id="lang"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="min-h-[40px] rounded-lg border border-line bg-surface px-2 py-1 text-sm text-ink"
+        className="min-h-[40px] rounded-lg border border-line bg-paper px-2 py-1 text-sm text-ink"
       >
         {LANGUAGES.map((l) => (
           <option key={l.code} value={l.code}>
@@ -31,7 +31,7 @@ export function LanguageSelect({ value, available, onChange, versions, versionId
       {versions.length > 1 && (
         <>
           <label htmlFor="ver" className="sr-only">Translation version</label>
-          <select id="ver" value={versionId} onChange={(e) => onVersionChange(e.target.value)} className="min-h-[40px] rounded-lg border border-line bg-surface px-2 py-1 text-sm text-ink">
+          <select id="ver" value={versionId} onChange={(e) => onVersionChange(e.target.value)} className="min-h-[40px] rounded-lg border border-line bg-paper px-2 py-1 text-sm text-ink">
             {versions.map((t) => (
               <option key={t.id} value={t.id}>{translationLabel(t)}</option>
             ))}

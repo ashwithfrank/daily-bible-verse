@@ -7,7 +7,7 @@ export function LikeButton({ verseDate }: { verseDate: string }) {
   useEffect(() => setLiked(isLiked(verseDate)), [verseDate]);
   return (
     <button type="button" className="btn" aria-pressed={liked} onClick={() => setLiked(toggleLike(verseDate))}>
-      <Heart size={18} aria-hidden className={liked ? 'fill-brand text-brand' : ''} />
+      <Heart size={18} aria-hidden className={liked ? 'fill-sage text-sage' : ''} />
       {liked ? 'Liked' : 'Like'}
     </button>
   );
