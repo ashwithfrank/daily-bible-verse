@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --paper: 250 248 244;
+  --surface: 255 255 255;
+  --ink: 35 32 43;
+  --muted: 107 102 119;
+  --line: 232 228 220;
+  --brand: 40 15 107;
+  --brand-soft: 239 234 249;
+  --on-brand: 255 255 255;
+  --danger: 176 32 48;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: 20 18 28;
+    --surface: 30 27 42;
+    --ink: 240 237 246;
+    --muted: 166 160 182;
+    --line: 52 48 68;
+    --brand: 190 177 247;
+    --brand-soft: 44 38 74;
+    --on-brand: 24 14 60;
+    --danger: 255 140 150;
+  }
+  .logo-mark { filter: brightness(0) invert(0.92); }
+}
+
+html { -webkit-text-size-adjust: 100%; }
+body { @apply bg-paper text-ink font-sans antialiased; min-height: 100vh; overflow-wrap: anywhere; }
+:focus-visible { outline: 2px solid rgb(var(--brand)); outline-offset: 2px; border-radius: 6px; }
+
+@layer components {
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-lg border border-line bg-surface px-4 py-2 text-sm font-medium text-ink transition-colors hover:bg-brand-soft disabled:cursor-not-allowed disabled:opacity-50; min-height: 44px; }
+  .btn-primary { @apply border-brand bg-brand text-on-brand hover:bg-brand/90; }
+  .btn-danger { @apply border-danger text-danger hover:bg-danger/10; }
+  .field { @apply w-full rounded-lg border border-line bg-surface px-3 py-2 text-base text-ink placeholder:text-muted; min-height: 44px; }
+  .label { @apply mb-1 block text-sm font-medium text-ink; }
+  .error-text { @apply mt-1 text-sm text-danger; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
