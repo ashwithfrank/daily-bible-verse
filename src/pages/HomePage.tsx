@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
 import { DatePicker } from '../components/DatePicker';
 import { LanguageSelect } from '../components/LanguageSelect';
@@ -23,6 +24,7 @@ export function HomePage() {
   const today = todayInTimezone(config.timezone);
   const requested = params.date;
   const dateValid = !requested || isValidIsoDate(requested);
+  const isFuture = !!requested && dateValid && requested > today;
   const date = requested && dateValid ? requested : today;
 
   const langParam = search.get('lang') ?? DEFAULT_LANGUAGE;
@@ -33,7 +35,7 @@ export function HomePage() {
   const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
-    if (!dateValid) return;
+    if (!dateValid || isFuture) return; // never ask the database for a future date
     const problem = getConfigError();
     if (problem) {
       setState({ status: 'error', message: problem });
@@ -47,7 +49,7 @@ export function HomePage() {
     return () => {
       cancelled = true;
     };
-  }, [date, dateValid, attempt]);
+  }, [date, dateValid, isFuture, attempt]);
 
   const verse = state.status === 'ready' ? state.verse : null;
   const versions = useMemo(() => (verse && lang !== 'en' ? translationsFor(verse, lang) : []), [verse, lang]);
@@ -61,10 +63,11 @@ export function HomePage() {
   useDocumentMeta({
     title: verse ? `${verse.reference} — Daily Bible Verse | AlphaOmega Studio` : 'Daily Bible Verse — AlphaOmega Studio',
     description: verse ? `${verse.reference}: ${stripOuterQuotes(verse.english_quote)}`.slice(0, 200) : 'Read one Bible verse each day. Pick any date, like it and share it.',
-    canonical: `${config.siteUrl}/${requested && dateValid ? requested : ''}`,
+    canonical: `${config.siteUrl}/${requested && dateValid && !isFuture ? requested : ''}`,
+    noindex: isFuture,
   });
 
-  const goTo = (iso: string) => navigate({ pathname: `/${iso}`, search: lang !== 'en' ? `?lang=${lang}` : '' });
+  const goTo = (iso: string) => iso <= today && navigate({ pathname: `/${iso}`, search: lang !== 'en' ? `?lang=${lang}` : '' });
   const setLang = (code: string) => {
     const next = new URLSearchParams(search);
     if (code === 'en') next.delete('lang');
@@ -88,23 +91,30 @@ export function HomePage() {
                 <h2 id="verse-ref" className="text-base font-semibold text-brand">
                   {verse ? verse.reference : formatLongDate(date)}
                 </h2>
-                <DatePicker date={date} onChange={goTo} />
+                <DatePicker date={date} onChange={goTo} max={today} />
               </div>
 
-              {state.status === 'loading' && <p className="mt-8 text-muted" role="status">Loading verse…</p>}
+              {isFuture && (
+                <div className="mt-8" role="alert">
+                  <p className="text-lg text-ink">Verses for future dates are not available yet.</p>
+                  <Link className="btn mt-4" to={{ pathname: '/', search: lang !== 'en' ? `?lang=${lang}` : '' }}>Go to today&apos;s verse</Link>
+                </div>
+              )}
 
-              {state.status === 'error' && (
+              {!isFuture && state.status === 'loading' && <p className="mt-8 text-muted" role="status">Loading verse…</p>}
+
+              {!isFuture && state.status === 'error' && (
                 <div className="mt-8" role="alert">
                   <p className="text-ink">{state.message}</p>
                   {!getConfigError() && <button className="btn mt-4" onClick={() => setAttempt((n) => n + 1)}>Try again</button>}
                 </div>
               )}
 
-              {state.status === 'empty' && (
+              {!isFuture && state.status === 'empty' && (
                 <p className="mt-8 text-lg text-ink">No verse has been scheduled for this date yet. Please choose another date.</p>
               )}
 
-              {verse && (
+              {!isFuture && verse && (
                 <>
                   <blockquote lang={translation ? lang : 'en'} className="mt-6 border-l-4 border-sage pl-4 font-serif text-[1.65rem] leading-[1.45] text-ink sm:pl-6 sm:text-4xl sm:leading-[1.4]">
                     <p>{`\u201C${stripOuterQuotes(quote)}\u201D`}</p>
@@ -137,6 +147,7 @@ export function HomePage() {
           )}
         </section>
       </main>
+      <Footer />
     </>
   );
 }
