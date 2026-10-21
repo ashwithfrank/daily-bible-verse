@@ -10,4 +10,4 @@ run "$PGBIN/pg_ctl -D $DIR/data -o '-p 54399 -k $DIR' -l $DIR/log start >/dev/nu
 trap 'run "$PGBIN/pg_ctl -D '$DIR'/data stop >/dev/null" || true' EXIT
 sleep 2
 run "$PGBIN/createdb -h $DIR -p 54399 rlscheck"
-run "cd $PWD && $PGBIN/psql -h $DIR -p 54399 -d rlscheck -v ON_ERROR_STOP=1 -f supabase/tests/local_rls_check.sql" 2>&1 | grep -E "PASS|FAIL|ERROR|ALL RLS"
+run "cd $PWD && $PGBIN/psql -h $DIR -p 54399 -d rlscheck -v ON_ERROR_STOP=1 -f ${1:-supabase/tests/local_rls_check.sql}" 2>&1 | grep -E "PASS|FAIL|ERROR|ALL "
