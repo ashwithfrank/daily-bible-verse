@@ -106,7 +106,7 @@ export function HomePage() {
 
               {verse && (
                 <>
-                  <blockquote lang={translation ? lang : 'en'} className="mt-6 font-serif text-[1.65rem] leading-[1.45] text-ink sm:text-4xl sm:leading-[1.4]">
+                  <blockquote lang={translation ? lang : 'en'} className="mt-6 border-l-4 border-sage pl-4 font-serif text-[1.65rem] leading-[1.45] text-ink sm:pl-6 sm:text-4xl sm:leading-[1.4]">
                     <p>{`\u201C${stripOuterQuotes(quote)}\u201D`}</p>
                   </blockquote>
                   {label && <p className="mt-3 text-sm text-muted">{label}</p>}
