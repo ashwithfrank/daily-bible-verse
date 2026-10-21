@@ -56,16 +56,37 @@ async function copyText(text: string): Promise<boolean> {
   }
 }
 
-export async function shareVerse(input: ShareInput): Promise<ShareResult> {
-  const text = buildShareText(input);
+interface Payload {
+  title: string;
+  text: string; // shared as body text (without the URL)
+  url: string;
+  clipboardText: string; // what to copy when native sharing is unavailable
+}
+
+async function deliver(p: Payload): Promise<ShareResult> {
   if (prefersNativeShare()) {
     try {
-      await navigator.share({ title: `${input.reference} \u2014 Daily Bible Verse`, text: text.replace(`\n${input.url}`, ''), url: input.url });
+      await navigator.share({ title: p.title, text: p.text, url: p.url });
       return 'shared';
     } catch (e) {
       if (e instanceof DOMException && e.name === 'AbortError') return 'cancelled';
       // any other native failure: fall back to copying
     }
   }
-  return (await copyText(text)) ? 'copied' : 'failed';
+  return (await copyText(p.clipboardText)) ? 'copied' : 'failed';
+}
+
+export function shareVerse(input: ShareInput): Promise<ShareResult> {
+  const text = buildShareText(input);
+  return deliver({ title: `${input.reference} \u2014 Daily Bible Verse`, text: text.replace(`\n${input.url}`, ''), url: input.url, clipboardText: text });
+}
+
+/** Shares the website itself: native share sheet where available, otherwise copies the link. */
+export function shareWebsite(url: string): Promise<ShareResult> {
+  return deliver({
+    title: 'Daily Bible Verse \u2014 AlphaOmega Studio',
+    text: 'A little Scripture, a little peace, every day.',
+    url,
+    clipboardText: url,
+  });
 }
