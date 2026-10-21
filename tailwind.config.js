@@ -10,6 +10,7 @@ export default {
         ink: 'rgb(var(--ink) / <alpha-value>)',
         muted: 'rgb(var(--muted) / <alpha-value>)',
         line: 'rgb(var(--line) / <alpha-value>)',
+        sage: 'rgb(var(--sage) / <alpha-value>)',
         brand: 'rgb(var(--brand) / <alpha-value>)',
         'brand-soft': 'rgb(var(--brand-soft) / <alpha-value>)',
         'on-brand': 'rgb(var(--on-brand) / <alpha-value>)',
