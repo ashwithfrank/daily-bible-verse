@@ -2,29 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+  Linen & Sage design tokens. Every colour in the app comes from these variables
+  (via the Tailwind names in tailwind.config.js), as space-separated RGB channels.
+
+  Supplied palette:  linen #FBF9F5 (paper) · soft sand #F2ECE1 (surface) · deep charcoal #2C3E35 (ink) · sage #6B8E78 (sage)
+  Derived for contrast: --brand (deep sage) is used wherever the accent carries text or a filled button,
+  because plain sage on linen is only about 3.5:1. Plain sage is kept for graphics, borders and highlights.
+*/
 :root {
-  --paper: 250 248 244;
-  --surface: 255 255 255;
-  --ink: 35 32 43;
-  --muted: 107 102 119;
-  --line: 232 228 220;
-  --brand: 40 15 107;
-  --brand-soft: 239 234 249;
-  --on-brand: 255 255 255;
-  --danger: 176 32 48;
+  --paper: 251 249 245;      /* #FBF9F5 page background, form controls */
+  --surface: 242 236 225;    /* #F2ECE1 cards, headers, tables */
+  --ink: 44 62 53;           /* #2C3E35 primary text */
+  --muted: 86 101 92;        /* #56655C secondary text (5.2:1 on sand) */
+  --line: 219 209 190;       /* #DBD1BE borders and dividers */
+  --sage: 107 142 120;       /* #6B8E78 supplied accent: highlights, icons, hover borders */
+  --brand: 71 106 85;        /* #476A55 deep sage: links, filled buttons, selected states (5.8:1 on linen) */
+  --brand-soft: 226 231 222; /* #E2E7DE sage tint for hover and active backgrounds */
+  --on-brand: 251 249 245;   /* text on filled brand surfaces */
+  --danger: 155 44 44;       /* #9B2C2C */
   color-scheme: light dark;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --paper: 20 18 28;
-    --surface: 30 27 42;
-    --ink: 240 237 246;
-    --muted: 166 160 182;
-    --line: 52 48 68;
-    --brand: 190 177 247;
-    --brand-soft: 44 38 74;
-    --on-brand: 24 14 60;
-    --danger: 255 140 150;
+    --paper: 20 27 23;
+    --surface: 29 40 34;
+    --ink: 238 241 234;
+    --muted: 168 182 172;
+    --line: 52 67 58;
+    --sage: 107 142 120;
+    --brand: 143 181 157;
+    --brand-soft: 38 56 45;
+    --on-brand: 16 28 21;
+    --danger: 255 150 150;
   }
   .logo-mark { filter: brightness(0) invert(0.92); }
 }
@@ -32,13 +42,15 @@
 html { -webkit-text-size-adjust: 100%; }
 body { @apply bg-paper text-ink font-sans antialiased; min-height: 100vh; overflow-wrap: anywhere; }
 :focus-visible { outline: 2px solid rgb(var(--brand)); outline-offset: 2px; border-radius: 6px; }
+::selection { background: rgb(var(--sage) / 0.3); }
 
 @layer components {
-  .btn { @apply inline-flex items-center justify-center gap-2 rounded-lg border border-line bg-surface px-4 py-2 text-sm font-medium text-ink transition-colors hover:bg-brand-soft disabled:cursor-not-allowed disabled:opacity-50; min-height: 44px; }
-  .btn-primary { @apply border-brand bg-brand text-on-brand hover:bg-brand/90; }
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-lg border border-line bg-paper px-4 py-2 text-sm font-medium text-ink transition-colors hover:border-sage hover:bg-brand-soft disabled:cursor-not-allowed disabled:opacity-50; min-height: 44px; }
+  .btn-primary { @apply border-brand bg-brand text-on-brand hover:border-brand hover:bg-brand/90; }
   .btn-danger { @apply border-danger text-danger hover:bg-danger/10; }
-  .field { @apply w-full rounded-lg border border-line bg-surface px-3 py-2 text-base text-ink placeholder:text-muted; min-height: 44px; }
+  .field { @apply w-full rounded-lg border border-line bg-paper px-3 py-2 text-base text-ink placeholder:text-muted focus:border-sage; min-height: 44px; }
   .label { @apply mb-1 block text-sm font-medium text-ink; }
+  a.underline { @apply text-brand underline-offset-2 hover:text-ink; }
   .error-text { @apply mt-1 text-sm text-danger; }
 }
 
