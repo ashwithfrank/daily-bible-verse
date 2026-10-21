@@ -18,7 +18,7 @@ export function AdminLayout() {
       <header className="border-b border-line bg-surface">
         <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3">
           <div className="flex items-center gap-3">
-            <img src="/aos-mark-small.png" alt="" width={32} height={30} className="logo-mark h-8 w-auto" />
+            <img src={`${import.meta.env.BASE_URL}aos-mark-small.png`} alt="" width={32} height={30} className="logo-mark h-8 w-auto" />
             <span className="font-bold">AlphaOmega Studio Admin</span>
           </div>
           <div className="flex items-center gap-3 text-sm text-muted">

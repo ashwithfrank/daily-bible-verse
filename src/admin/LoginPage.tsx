@@ -31,7 +31,7 @@ export function LoginPage() {
 
   return (
     <main className="mx-auto flex min-h-screen max-w-sm flex-col justify-center px-4">
-      <img src="/aos-mark-small.png" alt="" width={56} height={53} className="logo-mark mb-4 h-14 w-auto" />
+      <img src={`${import.meta.env.BASE_URL}aos-mark-small.png`} alt="" width={56} height={53} className="logo-mark mb-4 h-14 w-auto" />
       <h1 className="text-2xl font-bold">Administrator sign in</h1>
       {configError && <p className="mt-3 text-danger" role="alert">{configError}</p>}
       <form onSubmit={submit} className="mt-6 space-y-4" noValidate>

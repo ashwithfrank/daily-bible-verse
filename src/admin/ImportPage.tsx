@@ -49,7 +49,7 @@ export function ImportPage() {
     <div className="space-y-4">
       <h1 className="text-2xl font-bold">Import verses from CSV</h1>
       <p className="text-sm text-muted">
-        Columns: <code>date,reference,english_quote</code>. Dates are YYYY-MM-DD. Existing dates are skipped, never overwritten. Up to 500 rows. <a className="underline" href="/sample-verses.csv" download>Download a sample file</a>.
+        Columns: <code>date,reference,english_quote</code>. Dates are YYYY-MM-DD. Existing dates are skipped, never overwritten. Up to 500 rows. <a className="underline" href={`${import.meta.env.BASE_URL}sample-verses.csv`} download>Download a sample file</a>.
       </p>
       <div>
         <label htmlFor="csvfile" className="label">CSV file</label>

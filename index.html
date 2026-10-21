@@ -2,6 +2,15 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      // GitHub Pages SPA fallback (inverse of 404.html): /<repo>/?/admin  ->  /<repo>/admin
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search.slice(1).split('&').map(function (s) { return s.replace(/~and~/g, '&'); }).join('?');
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })(window.location);
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Daily Bible Verse — AlphaOmega Studio</title>
     <meta name="description" content="Read one Bible verse each day, in English and Indian languages. Pick any date, like it and share it. By AlphaOmega Studio." />
