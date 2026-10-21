@@ -15,10 +15,12 @@ function loadEnv() {
 
 const env = loadEnv();
 const site = (env.VITE_SITE_URL || '').replace(/\/$/, '');
-const urls = [`${site}/`];
+const tz = env.VITE_PRIMARY_TIMEZONE || 'Asia/Kolkata';
+const today = new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+const urls = [`${site}/`, `${site}/about`, `${site}/privacy`];
 if (env.VITE_SUPABASE_URL && env.VITE_SUPABASE_ANON_KEY) {
   try {
-    const res = await fetch(`${env.VITE_SUPABASE_URL}/rest/v1/daily_verses?select=verse_date&order=verse_date&limit=1000`, {
+    const res = await fetch(`${env.VITE_SUPABASE_URL}/rest/v1/daily_verses?select=verse_date&order=verse_date&verse_date=lte.${today}&limit=1000`, {
       headers: { apikey: env.VITE_SUPABASE_ANON_KEY, Authorization: `Bearer ${env.VITE_SUPABASE_ANON_KEY}` },
     });
     if (res.ok) for (const r of await res.json()) urls.push(`${site}/${r.verse_date}`);
