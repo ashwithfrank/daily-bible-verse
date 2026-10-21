@@ -11,4 +11,5 @@ export default defineConfig({
     setupFiles: ['./tests/setup.ts'],
     include: ['tests/**/*.test.{ts,tsx}'],
   },
+  base: '/daily-bible-verse/',
 });
