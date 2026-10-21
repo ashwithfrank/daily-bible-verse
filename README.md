@@ -130,3 +130,10 @@ scripts/postbuild.mjs                      sitemap and robots
 - Likes are per browser only.
 - The date picker uses the browser's native date control, so its look varies by device.
 - Admin screens were verified through component tests and the database through the local PostgreSQL check, not by clicking through a live deployment.
+
+## Future dates, footer, About/Privacy, theme toggle
+
+- **Future verses are hidden from the public.** Readers can open today and earlier dates only. "Today" is the calendar date in `VITE_PRIMARY_TIMEZONE` (default Asia/Kolkata), not the device date. The rule lives in `getVerseByDate` (`src/lib/verses.ts`), which refuses future or invalid dates before any request is made, and the query also adds `verse_date <= today`. The date picker has `max`, the next-day button is disabled at today, and a future URL such as `/2099-01-01` shows a message with a "Go to today's verse" button. The admin dashboard uses `src/admin/api.ts`, which has no such limit, so administrators can still schedule ahead.
+- **Optional database enforcement:** run `supabase/migrations/004_optional_hide_future_verses.sql` in the Supabase SQL editor to make the database itself refuse to return future verses to anyone but administrators. Without it, someone calling the Supabase REST API directly with the public key could still read future verses. Verify locally with `bash supabase/tests/run_local_rls_check.sh supabase/tests/local_rls_future_check.sql`. If you change the timezone, change it in that file too.
+- **Theme:** `data-theme="light|dark"` on `<html>`. An inline script in `index.html` applies the saved choice (`localStorage` key `aos-theme`) or, on a first visit, the system preference, before the page paints. The header toggle saves an explicit choice, which then takes priority over the system setting. Blocked storage is tolerated (the choice applies for that visit).
+- **Privacy policy:** `src/pages/PrivacyPage.tsx` describes only what the code does. It publishes no contact address because none exists in the project; add one there when you have it.

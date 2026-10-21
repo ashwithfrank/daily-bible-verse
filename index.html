@@ -11,6 +11,15 @@
         }
       })(window.location);
     </script>
+    <script>
+      // Apply the saved or system colour theme before first paint (no flash). Mirrors src/lib/theme.ts.
+      (function () {
+        var t = null;
+        try { var v = window.localStorage.getItem('aos-theme'); if (v === 'light' || v === 'dark') t = v; } catch (e) {}
+        if (!t) { try { t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; } catch (e) { t = 'light'; } }
+        document.documentElement.setAttribute('data-theme', t);
+      })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Daily Bible Verse — AlphaOmega Studio</title>
     <meta name="description" content="Read one Bible verse each day, in English and Indian languages. Pick any date, like it and share it. By AlphaOmega Studio." />
